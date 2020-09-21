@@ -18,6 +18,9 @@ import retrofit2.http.Query
  */
 interface PlaceService {
 
+    /**
+     * 获取城市数据
+     */
     @GET("v2/place?token=${SunnyWeatherApplication.TOKEN}&lang=zh_CN")
     suspend fun searchPlaces(@Query("query") query: String): PlaceResponse
 }

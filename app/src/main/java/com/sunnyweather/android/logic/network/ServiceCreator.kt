@@ -29,7 +29,7 @@ object ServiceCreator {
      */
     private val loggingInterceptor = HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger{
         override fun log(message: String) {
-            Log.e(TAG, "log: " + message )
+            Log.d(TAG, message)
         }
 
     })

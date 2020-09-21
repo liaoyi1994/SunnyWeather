@@ -57,7 +57,6 @@ class PlaceFragment: Fragment() {
         }
         mViewModel.placeLiveData.observe(viewLifecycleOwner, Observer {
             val places = it.getOrNull()
-            Log.e(TAG, "onActivityCreated: " + places.toString() )
             if(places != null){
                 recyclerView.visibility = View.VISIBLE
                 bgImageView.visibility = View.GONE

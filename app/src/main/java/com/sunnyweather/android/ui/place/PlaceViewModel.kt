@@ -25,10 +25,7 @@ class PlaceViewModel: ViewModel() {
     val placeList = ArrayList<Place>()
 
     val placeLiveData = Transformations.switchMap(searchLiveData){
-
-        Repository.searchPlaces(it).apply {
-            Log.e(TAG, "${value}" )
-        }
+        Repository.searchPlaces(it)
     }
 
     fun searchPlaces(query: String){

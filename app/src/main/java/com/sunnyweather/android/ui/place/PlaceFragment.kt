@@ -1,8 +1,8 @@
 package com.sunnyweather.android.ui.place
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,15 +12,14 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.internal.TextWatcherAdapter
 import com.sunnyweather.android.databinding.FragmentPlaceBinding
+import com.sunnyweather.android.ui.weather.WeatherActivity
 
 class PlaceFragment: Fragment() {
 
     private var mBinding: FragmentPlaceBinding? = null
 
-    private val mViewModel: PlaceViewModel by lazy {
+    val mViewModel: PlaceViewModel by lazy {
         ViewModelProviders.of(this)[PlaceViewModel::class.java]
     }
 
@@ -36,10 +35,23 @@ class PlaceFragment: Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        
+        if (mViewModel.isPlaceSaved()){
+            val place = mViewModel.getSavePlace()
+            val intent = Intent(context, WeatherActivity::class.java).apply {
+                putExtra("location_lng", place.location.lng)
+                putExtra("location_lat", place.location.lat)
+                putExtra("place_name", place.name)
+            }
+            startActivity(intent)
+            activity?.finish()
+            return
+        }
 
         mBinding?.recyclerView?.layoutManager = LinearLayoutManager(requireContext())
-        val placeAdapter = PlaceAdapter(mViewModel.placeList)
+        val placeAdapter = PlaceAdapter(this, mViewModel.placeList)
         mBinding?.recyclerView?.adapter = placeAdapter
+
         mBinding?.searchPlaceEdit?.addTextChangedListener {editable ->
             val content = editable.toString()
             if (content.isNotEmpty()){

@@ -12,6 +12,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sunnyweather.android.MainActivity
 import com.sunnyweather.android.databinding.FragmentPlaceBinding
 import com.sunnyweather.android.ui.weather.WeatherActivity
 
@@ -35,15 +36,14 @@ class PlaceFragment: Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        
-        if (mViewModel.isPlaceSaved()){
+        Log.e(TAG, "onActivityCreated: ===================  ${activity}" )
+        if (activity is MainActivity && mViewModel.isPlaceSaved()){
             val place = mViewModel.getSavePlace()
-            val intent = Intent(context, WeatherActivity::class.java).apply {
-                putExtra("location_lng", place.location.lng)
-                putExtra("location_lat", place.location.lat)
-                putExtra("place_name", place.name)
-            }
-            startActivity(intent)
+            val intent = Intent(context, WeatherActivity::class.java)
+            intent.putExtra("location_lng", place.location.lng)
+            intent.putExtra("location_lat", place.location.lat)
+            intent.putExtra("place_name", place.name)
+            activity?.startActivity(intent)
             activity?.finish()
             return
         }

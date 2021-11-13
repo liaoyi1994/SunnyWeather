@@ -1,6 +1,7 @@
 package com.sunnyweather.android.ui.place
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -27,13 +28,22 @@ class PlaceAdapter(private val fragment: PlaceFragment, private val places: List
         holder.itemView.setOnClickListener{
             val position = holder.adapterPosition
             val place = places[position]
-            val intent = Intent(fragment.requireActivity(), WeatherActivity::class.java)
-            intent.putExtra("location_lng", place.location.lng)
-            intent.putExtra("location_lat", place.location.lat)
-            intent.putExtra("place_name", place.name)
+            val activity = fragment.activity
+            if (activity is WeatherActivity){
+                activity.mBinding.drawerLayout.closeDrawers()
+                activity.mViewModel.locationLng = place.location.lng
+                activity.mViewModel.locationLat = place.location.lat
+                activity.mViewModel.placeName = place.name
+                activity.refreshWeather()
+            }else {
+                val intent = Intent(fragment.requireActivity(), WeatherActivity::class.java)
+                intent.putExtra("location_lng", place.location.lng)
+                intent.putExtra("location_lat", place.location.lat)
+                intent.putExtra("place_name", place.name)
+                fragment.startActivity(intent)
+                fragment.activity?.finish()
+            }
             fragment.mViewModel.savePlace(place)
-            fragment.startActivity(intent)
-            fragment.activity?.finish()
         }
         return holder
     }

@@ -1,4 +1,4 @@
-package com.synnyweatherandroid
+package com.android
 
 import org.junit.Test
 
